@@ -2,7 +2,7 @@ require_relative './reader'
 
 class NWSReader < Reader
   def read
-    RSS.read(address)&.map { |item| parse(item) }
+    Array(RSS.read(address)).map { |item| parse(item) }
   end
 
   private

@@ -30,23 +30,20 @@ describe AlertsController do
     end
 
     context 'when the address is supported' do
-      let(:address) { 'nws.xml'}
-      let(:feed_items) { nil }
-
-      before do
-        allow(RSS).to receive(:read).and_return(feed_items)
-      end
-
-      it 'reads the feed' do
-        import
-
-        expect(RSS).to have_received(:read).with(address)
-      end
+      let(:address) { 'nws.xml' }
 
       context 'and the feed is nil' do
         let(:feed_items) { nil }
 
-        before { import }
+        before do
+          allow(RSS).to receive(:read).and_return(feed_items)
+
+          import
+        end
+
+        it 'reads the feed' do
+           expect(RSS).to have_received(:read).with(address)
+        end
 
         it 'renders the new page with a notice' do
           expect(controller).to have_received(:render)
@@ -57,7 +54,15 @@ describe AlertsController do
       context 'and the feed is empty' do
         let(:feed_items) { [] }
 
-        before { import }
+        before do
+          allow(RSS).to receive(:read).and_return(feed_items)
+
+          import
+        end
+
+        it 'reads the feed' do
+          expect(RSS).to have_received(:read).with(address)
+        end
 
         it 'renders the new page with a notice' do
           expect(controller).to have_received(:render)
@@ -69,6 +74,7 @@ describe AlertsController do
         let(:feed_items) { [feed_item] }
 
         context 'and the feed is the NWS RSS feed' do
+          let(:address) { 'nws.xml' }
           let(:feed_item) do
             instance_double(
               'feed_item',
@@ -83,10 +89,15 @@ describe AlertsController do
           end
 
           before do
+            allow(RSS).to receive(:read).and_return(feed_items)
             allow(Alert).to receive(:create)
             allow(controller).to receive(:redirect_to)
 
             import
+          end
+
+          it 'reads the feed' do
+            expect(RSS).to have_received(:read).with(address)
           end
 
           it 'creates an alert for each item in the feed' do
@@ -107,36 +118,40 @@ describe AlertsController do
           end
         end
 
-        xcontext 'and the feed is the NOAA RSS feed' do
+        context 'and the feed is the NOAA RSS feed' do
+          let(:address) { 'noaa.xml' }
           let(:feed_item) do
             instance_double(
               'feed_item',
               id: 'id',
               title: 'title',
-              summary: 'summary',
-              published: 'published',
-              updated: 'updated',
-              cap_effective: 'cap_effective',
-              cap_expires: 'cap_expires'
+              description: 'description',
+              pub_date: '2020-01-01 00:00:00 -0800',
+              last_update: 'last_update',
             )
           end
 
           before do
+            allow(RSS).to receive(:read).and_return(feed_items)
             allow(Alert).to receive(:create)
             allow(controller).to receive(:redirect_to)
 
             import
           end
 
+          it 'reads the feed' do
+            expect(RSS).to have_received(:read).with(address)
+          end
+
           it 'creates an alert for each item in the feed' do
             expect(Alert).to have_received(:create).with(
               uuid: 'id',
               title: 'title',
-              description: 'summary',
-              published_at: 'published',
-              updated_at: 'updated',
-              effective_at: 'cap_effective',
-              expires_at: 'cap_expires'
+              description: 'description',
+              published_at: '2020-01-01 00:00:00 -0800',
+              updated_at: 'last_update',
+              effective_at: '2020-01-01 00:00:00 -0800',
+              expires_at: '2020-01-01 06:00:00 -0800'
             )
           end
 

@@ -1,6 +1,4 @@
 require_relative '../../../lib/base_controller'
-require_relative '../../../lib/alert'
-require_relative '../../../lib/rss'
 require_relative '../../../application_centric/app/adapters/http_response_adapter'
 require_relative '../../../application_centric/app/readers/reader_factory'
 require_relative '../../../application_centric/domain/repositories/alert_repository'

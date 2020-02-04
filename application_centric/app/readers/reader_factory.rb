@@ -1,5 +1,6 @@
 require_relative '../../../application_centric/app/readers/noaa_reader'
 require_relative '../../../application_centric/app/readers/nws_reader'
+require_relative '../../../application_centric/app/readers/twa_reader'
 require_relative '../../../application_centric/app/readers/reader'
 
 class ReaderFactory
@@ -9,6 +10,8 @@ class ReaderFactory
       NOAAReader.new(address)
     when /nws/
       NWSReader.new(address)
+    when /TornadoWeather/
+      TWAReader.new(address)
     else
       Reader.new(address)
     end

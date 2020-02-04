@@ -1,4 +1,5 @@
 require_relative './reader'
+require_relative '../../../lib/rss'
 
 class NWSReader < Reader
   def read

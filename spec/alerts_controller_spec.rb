@@ -29,52 +29,41 @@ describe AlertsController do
       end
     end
 
-    context 'when the address is supported' do
-      let(:address) { 'nws.xml' }
+    context 'and the address is supported' do
+      let(:feed_items) { [feed_item].compact }
+      let(:feed_item) { nil }
 
-      context 'and the feed is nil' do
-        let(:feed_items) { nil }
-
-        before do
-          allow(RSS).to receive(:read).and_return(feed_items)
-
-          import
-        end
-
-        it 'reads the feed' do
-           expect(RSS).to have_received(:read).with(address)
-        end
-
-        it 'renders the new page with a notice' do
-          expect(controller).to have_received(:render)
-            .with(:new, notice: a_kind_of(String))
-        end
+      before do
+        allow(Alert).to receive(:create)
+        allow(controller).to receive(:render)
+        allow(controller).to receive(:redirect_to)
       end
 
-      context 'and the feed is empty' do
-        let(:feed_items) { [] }
+      context 'and the feed is the NWS RSS feed' do
+        let(:address) { 'nws.xml' }
 
         before do
           allow(RSS).to receive(:read).and_return(feed_items)
-
-          import
         end
 
         it 'reads the feed' do
+          import
+
           expect(RSS).to have_received(:read).with(address)
         end
 
-        it 'renders the new page with a notice' do
-          expect(controller).to have_received(:render)
-            .with(:new, notice: a_kind_of(String))
+        context 'and the feed has no content' do
+          let(:feed_item) { nil }
+
+          before { import }
+
+          it 'renders the new page with a notice' do
+            expect(controller).to have_received(:render)
+              .with(:new, notice: a_kind_of(String))
+          end
         end
-      end
 
-      context 'and the feed is not empty' do
-        let(:feed_items) { [feed_item] }
-
-        context 'and the feed is the NWS RSS feed' do
-          let(:address) { 'nws.xml' }
+        context 'and the feed has content' do
           let(:feed_item) do
             instance_double(
               'feed_item',
@@ -88,17 +77,7 @@ describe AlertsController do
             )
           end
 
-          before do
-            allow(RSS).to receive(:read).and_return(feed_items)
-            allow(Alert).to receive(:create)
-            allow(controller).to receive(:redirect_to)
-
-            import
-          end
-
-          it 'reads the feed' do
-            expect(RSS).to have_received(:read).with(address)
-          end
+          before { import }
 
           it 'creates an alert for each item in the feed' do
             expect(Alert).to have_received(:create).with(
@@ -117,9 +96,33 @@ describe AlertsController do
               .with('/alerts', notice: a_kind_of(String))
           end
         end
+      end
 
-        context 'and the feed is the NOAA RSS feed' do
-          let(:address) { 'noaa.xml' }
+      context 'and the feed is the NOAA RSS feed' do
+        let(:address) { 'noaa.xml' }
+
+        before do
+          allow(RSS).to receive(:read).and_return(feed_items)
+        end
+
+        it 'reads the feed' do
+          import
+
+          expect(RSS).to have_received(:read).with(address)
+        end
+
+        context 'and the feed has no content' do
+          let(:feed_item) { nil }
+
+          before { import }
+
+          it 'renders the new page with a notice' do
+            expect(controller).to have_received(:render)
+              .with(:new, notice: a_kind_of(String))
+          end
+        end
+
+        context 'and the feed has content' do
           let(:feed_item) do
             instance_double(
               'feed_item',
@@ -131,17 +134,7 @@ describe AlertsController do
             )
           end
 
-          before do
-            allow(RSS).to receive(:read).and_return(feed_items)
-            allow(Alert).to receive(:create)
-            allow(controller).to receive(:redirect_to)
-
-            import
-          end
-
-          it 'reads the feed' do
-            expect(RSS).to have_received(:read).with(address)
-          end
+          before { import }
 
           it 'creates an alert for each item in the feed' do
             expect(Alert).to have_received(:create).with(
@@ -152,6 +145,61 @@ describe AlertsController do
               updated_at: 'last_update',
               effective_at: '2020-01-01 00:00:00 -0800',
               expires_at: '2020-01-01 06:00:00 -0800'
+            )
+          end
+
+          it 'redirects to the alerts page with a notice' do
+            expect(controller).to have_received(:redirect_to)
+              .with('/alerts', notice: a_kind_of(String))
+          end
+        end
+      end
+
+      context 'and the feed is the Tornado Weather Alerts twitter account' do
+        let(:address) { 'twitter.com/TornadoWeather' }
+
+        before do
+          allow(Twitter).to receive(:fetch).and_return(feed_items)
+        end
+
+        it 'reads the feed' do
+          import
+
+          expect(Twitter).to have_received(:fetch).with(address)
+        end
+
+        context 'and the feed has no content' do
+          let(:feed_item) { nil }
+
+          before { import }
+
+          it 'renders the new page with a notice' do
+            expect(controller).to have_received(:render)
+              .with(:new, notice: a_kind_of(String))
+          end
+        end
+
+        context 'and the feed has content' do
+          let(:feed_item) do
+            instance_double(
+              'feed_item',
+              id: 'tweet id',
+              body: 'title.description',
+              date_time: '2020-01-01 00:00:00 -0800',
+            )
+          end
+
+          before { import }
+
+          it 'creates an alert for each item in the feed' do
+            expect(Alert).to have_received(:create).with(
+              uuid: 'tweet id',
+              title: 'title',
+              description: 'description',
+              published_at: '2020-01-01 00:00:00 -0800',
+              updated_at: '2020-01-01 00:00:00 -0800',
+              effective_at: '2020-01-01 00:00:00 -0800',
+              expires_at: '2020-01-01 01:00:00 -0800'
             )
           end
 

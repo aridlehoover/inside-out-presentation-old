@@ -1,4 +1,5 @@
 require_relative './reader'
+require_relative '../../../lib/rss'
 
 class NOAAReader < Reader
   def read

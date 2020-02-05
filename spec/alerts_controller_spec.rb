@@ -80,6 +80,7 @@ describe AlertsController do
             allow(Subscriber).to receive(:find_all).and_return(subscribers)
             allow(controller).to receive(:redirect_to)
             allow(SMS).to receive(:deliver)
+            allow(Email).to receive(:deliver)
 
             import
           end
@@ -103,11 +104,24 @@ describe AlertsController do
 
           context 'and there are subscribers' do
             let(:subscribers) { [subscriber] }
-            let(:subscriber) { instance_double(Subscriber) }
+            let(:subscriber) { instance_double(Subscriber, channel: channel) }
 
-            it 'notifies subscribers of active alerts via SMS' do
-              expect(SMS).to have_received(:deliver)
-                .with(subscriber, [alert])
+            context 'and the channel is SMS' do
+              let(:channel) { 'SMS' }
+
+              it 'notifies subscribers of active alerts via SMS' do
+                expect(SMS).to have_received(:deliver)
+                  .with(subscriber, [alert])
+              end
+            end
+
+            context 'and the channel is Email' do
+              let(:channel) { 'Email' }
+
+              it 'notifies subscribers of active alerts via Email' do
+                expect(Email).to have_received(:deliver)
+                  .with(subscriber, [alert])
+              end
             end
           end
         end
@@ -156,14 +170,14 @@ describe AlertsController do
           end
           let(:alert) { instance_double(Alert, active?: active) }
           let(:active) { true }
-          let(:subscribers) { [subscriber] }
-          let(:subscriber) { instance_double(Subscriber) }
+          let(:subscribers) { [] }
 
           before do
             allow(Alert).to receive(:create).and_return(alert)
             allow(Subscriber).to receive(:find_all).and_return(subscribers)
             allow(controller).to receive(:redirect_to)
             allow(SMS).to receive(:deliver)
+            allow(Email).to receive(:deliver)
 
             import
           end
@@ -187,11 +201,24 @@ describe AlertsController do
 
           context 'and there are subscribers' do
             let(:subscribers) { [subscriber] }
-            let(:subscriber) { instance_double(Subscriber) }
+            let(:subscriber) { instance_double(Subscriber, channel: channel) }
 
-            it 'notifies subscribers of active alerts via SMS' do
-              expect(SMS).to have_received(:deliver)
-                .with(subscriber, [alert])
+            context 'and the channel is SMS' do
+              let(:channel) { 'SMS' }
+
+              it 'notifies subscribers of active alerts via SMS' do
+                expect(SMS).to have_received(:deliver)
+                  .with(subscriber, [alert])
+              end
+            end
+
+            context 'and the channel is Email' do
+              let(:channel) { 'Email' }
+
+              it 'notifies subscribers of active alerts via Email' do
+                expect(Email).to have_received(:deliver)
+                  .with(subscriber, [alert])
+              end
             end
           end
         end
@@ -238,14 +265,14 @@ describe AlertsController do
           end
           let(:alert) { instance_double(Alert, active?: active) }
           let(:active) { true }
-          let(:subscribers) { [subscriber] }
-          let(:subscriber) { instance_double(Subscriber) }
+          let(:subscribers) { [] }
 
           before do
             allow(Alert).to receive(:create).and_return(alert)
             allow(Subscriber).to receive(:find_all).and_return(subscribers)
             allow(controller).to receive(:redirect_to)
             allow(SMS).to receive(:deliver)
+            allow(Email).to receive(:deliver)
 
             import
           end
@@ -269,11 +296,24 @@ describe AlertsController do
 
           context 'and there are subscribers' do
             let(:subscribers) { [subscriber] }
-            let(:subscriber) { instance_double(Subscriber) }
+            let(:subscriber) { instance_double(Subscriber, channel: channel) }
 
-            it 'notifies subscribers of active alerts via SMS' do
-              expect(SMS).to have_received(:deliver)
-                .with(subscriber, [alert])
+            context 'and the channel is SMS' do
+              let(:channel) { 'SMS' }
+
+              it 'notifies subscribers of active alerts via SMS' do
+                expect(SMS).to have_received(:deliver)
+                  .with(subscriber, [alert])
+              end
+            end
+
+            context 'and the channel is Email' do
+              let(:channel) { 'Email' }
+
+              it 'notifies subscribers of active alerts via Email' do
+                expect(Email).to have_received(:deliver)
+                  .with(subscriber, [alert])
+              end
             end
           end
         end

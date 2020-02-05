@@ -1,10 +1,10 @@
 require_relative '../../../lib/subscriber'
-require_relative '../notifiers/sms_notifier'
+require_relative '../notifiers/notifier_factory'
 
 class NotificationAdapter
   def on_success(records)
     Subscriber.find_all.each do |subscriber|
-      SMSNotifier.new(subscriber, records).notify
+      NotifierFactory.build(subscriber, records).notify
     end
   end
 

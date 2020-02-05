@@ -4,6 +4,7 @@ require_relative '../../../lib/subscriber'
 require_relative '../../../lib/rss'
 require_relative '../../../lib/twitter'
 require_relative '../../../lib/sms'
+require_relative '../../../lib/email'
 
 class AlertsController < BaseController
   def import
@@ -63,7 +64,12 @@ class AlertsController < BaseController
     active_alerts = alerts.select(&:active?)
 
     Subscriber.find_all.each do |subscriber|
-      SMS.deliver(subscriber, active_alerts)
+      case subscriber.channel
+      when 'SMS'
+        SMS.deliver(subscriber, active_alerts)
+      when 'Email'
+        Email.deliver(subscriber, active_alerts)
+      end
     end
 
     redirect_to '/alerts', notice: 'Alerts imported.'

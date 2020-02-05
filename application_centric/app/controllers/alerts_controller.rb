@@ -1,4 +1,5 @@
 require_relative '../../../lib/base_controller'
+require_relative '../../../application_centric/app/adapters/notification_adapter'
 require_relative '../../../application_centric/app/adapters/http_response_adapter'
 require_relative '../../../application_centric/app/readers/reader_factory'
 require_relative '../../../application_centric/domain/repositories/alert_repository'
@@ -21,6 +22,7 @@ class AlertsController < BaseController
 
   def observers
     [
+      NotificationAdapter.new,
       HTTPResponseAdapter.new(self)
     ]
   end

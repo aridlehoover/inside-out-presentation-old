@@ -1,7 +1,9 @@
 require_relative '../../../lib/base_controller'
 require_relative '../../../lib/alert'
+require_relative '../../../lib/subscriber'
 require_relative '../../../lib/rss'
 require_relative '../../../lib/twitter'
+require_relative '../../../lib/sms'
 
 class AlertsController < BaseController
   def import
@@ -22,7 +24,7 @@ class AlertsController < BaseController
       return render :new, notice: 'Unable to import alerts.'
     end
 
-    items.each do |item|
+    alerts = items.map do |item|
       case address
       when /noaa/
         Alert.create(
@@ -56,6 +58,12 @@ class AlertsController < BaseController
           expires_at: (Time.parse(item.date_time) + 3600).to_s
         )
       end
+    end
+
+    active_alerts = alerts.select(&:active?)
+
+    Subscriber.find_all.each do |subscriber|
+      SMS.deliver(subscriber, active_alerts)
     end
 
     redirect_to '/alerts', notice: 'Alerts imported.'

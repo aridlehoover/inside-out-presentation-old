@@ -24,6 +24,6 @@ class ImportAlertsService
   end
 
   def alerts
-    @alerts || items.each { |item| repository.create(item) }
+    @alerts ||= items.map { |item| repository.create(item) }
   end
 end

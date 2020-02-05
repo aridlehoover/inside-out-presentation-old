@@ -5,6 +5,7 @@ require_relative '../../../lib/rss'
 require_relative '../../../lib/twitter'
 require_relative '../../../lib/sms'
 require_relative '../../../lib/email'
+require_relative '../../../lib/messenger'
 
 class AlertsController < BaseController
   def import
@@ -69,6 +70,8 @@ class AlertsController < BaseController
         SMS.deliver(subscriber, active_alerts)
       when 'Email'
         Email.deliver(subscriber, active_alerts)
+      when 'Messenger'
+        Messenger.deliver(subscriber, active_alerts)
       end
     end
 

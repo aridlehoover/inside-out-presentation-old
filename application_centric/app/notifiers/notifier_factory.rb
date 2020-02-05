@@ -1,4 +1,5 @@
 require_relative '../../../application_centric/app/notifiers/email_notifier'
+require_relative '../../../application_centric/app/notifiers/messenger_notifier'
 require_relative '../../../application_centric/app/notifiers/sms_notifier'
 require_relative '../../../application_centric/app/notifiers/notifier'
 
@@ -7,6 +8,8 @@ class NotifierFactory
     case subscriber.channel
     when 'Email'
       EmailNotifier.new(subscriber, alerts)
+    when 'Messenger'
+      MessengerNotifier.new(subscriber, alerts)
     when 'SMS'
       SMSNotifier.new(subscriber, alerts)
     else

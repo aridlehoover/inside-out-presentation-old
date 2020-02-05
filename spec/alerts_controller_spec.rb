@@ -81,6 +81,7 @@ describe AlertsController do
             allow(controller).to receive(:redirect_to)
             allow(SMS).to receive(:deliver)
             allow(Email).to receive(:deliver)
+            allow(Messenger).to receive(:deliver)
 
             import
           end
@@ -120,6 +121,15 @@ describe AlertsController do
 
               it 'notifies subscribers of active alerts via Email' do
                 expect(Email).to have_received(:deliver)
+                  .with(subscriber, [alert])
+              end
+            end
+
+            context 'and the channel is Messenger' do
+              let(:channel) { 'Messenger' }
+
+              it 'notifies subscribers of active alerts via Messenger' do
+                expect(Messenger).to have_received(:deliver)
                   .with(subscriber, [alert])
               end
             end
@@ -178,6 +188,7 @@ describe AlertsController do
             allow(controller).to receive(:redirect_to)
             allow(SMS).to receive(:deliver)
             allow(Email).to receive(:deliver)
+            allow(Messenger).to receive(:deliver)
 
             import
           end
@@ -217,6 +228,15 @@ describe AlertsController do
 
               it 'notifies subscribers of active alerts via Email' do
                 expect(Email).to have_received(:deliver)
+                  .with(subscriber, [alert])
+              end
+            end
+
+            context 'and the channel is Messenger' do
+              let(:channel) { 'Messenger' }
+
+              it 'notifies subscribers of active alerts via Messenger' do
+                expect(Messenger).to have_received(:deliver)
                   .with(subscriber, [alert])
               end
             end
@@ -273,6 +293,7 @@ describe AlertsController do
             allow(controller).to receive(:redirect_to)
             allow(SMS).to receive(:deliver)
             allow(Email).to receive(:deliver)
+            allow(Messenger).to receive(:deliver)
 
             import
           end
@@ -312,6 +333,15 @@ describe AlertsController do
 
               it 'notifies subscribers of active alerts via Email' do
                 expect(Email).to have_received(:deliver)
+                  .with(subscriber, [alert])
+              end
+            end
+
+            context 'and the channel is Messenger' do
+              let(:channel) { 'Messenger' }
+
+              it 'notifies subscribers of active alerts via Messenger' do
+                expect(Messenger).to have_received(:deliver)
                   .with(subscriber, [alert])
               end
             end

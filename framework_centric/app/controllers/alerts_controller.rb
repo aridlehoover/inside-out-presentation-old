@@ -64,14 +64,16 @@ class AlertsController < BaseController
 
     active_alerts = alerts.select(&:active?)
 
-    Subscriber.find_all.each do |subscriber|
-      case subscriber.channel
-      when 'SMS'
-        SMS.deliver(subscriber, active_alerts)
-      when 'Email'
-        Email.deliver(subscriber, active_alerts)
-      when 'Messenger'
-        Messenger.deliver(subscriber, active_alerts)
+    if active_alerts.any?
+      Subscriber.find_all.each do |subscriber|
+        case subscriber.channel
+        when 'SMS'
+          SMS.deliver(subscriber, active_alerts)
+        when 'Email'
+          Email.deliver(subscriber, active_alerts)
+        when 'Messenger'
+          Messenger.deliver(subscriber, active_alerts)
+        end
       end
     end
 

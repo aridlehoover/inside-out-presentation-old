@@ -26,7 +26,7 @@ The consequence of not treating your business logic as a first class citizen is 
 
 I've personally seen a 10,000 line model with over 700 methods, and a [flog](https://github.com/seattlerb/flog) of over 12,000. I've also seen a 15,000 line controller with over 400 methods, and a flog of over 28,000. These are not classes. They are entire applications in a single file. They're also the antithesis of what the OO community preaches.
 
-* [Sandi Metz](https://github.com/skmetz), who wrote _Practical Object Oriented Design in Ruby_, has rules for object oriented development. The first two rules say that a class can have no more that 100 lines of code, a method no more than 5.
+*  [Sandi Metz](https://github.com/skmetz), who wrote _Practical Object Oriented Design in Ruby_, has rules for object oriented development. The first two rules say that a class can have no more that 100 lines of code, a method no more than 5.
 
 * In his book, _Working Effectively with Legacy Code_, Michael Feathers says, "In nearly every OO application there’s at least one large class. By large, I mean a class that has 15 or more methods."
 
@@ -57,6 +57,15 @@ What this says to me is that small, simple applications are likely good candidat
 The Weather Alerting System is currently so small, that it makes sense to go with the more procedural framework-centric method. If the application were to grow substantially, there would likely come an inflection point at which it makes more sense to go with the application centric approach.
 
 ## Resources
+
+Read these books!
+
+<img src="https://prodimage.images-bn.com/pimages/9780321721334_p0_v2_s600x595.jpg" width="100" style="margin: 20px; width: 100px"> <img src="https://prodimage.images-bn.com/pimages/9780131177055_p0_v2_s600x595.jpg" width="100" style="margin: 20px; width: 100px"> <img src="https://prodimage.images-bn.com/pimages/9780133065268_p0_v1_s600x595.jpg" width="100" style="margin: 20px; width: 100px"> <img src="https://prodimage.images-bn.com/pimages/9780321127426_p0_v2_s600x595.jpg" width="100" style="margin: 20px; width: 100px">
+
+* [Practical Object Oriented Design in Ruby](https://www.barnesandnoble.com/w/practical-object-oriented-design-in-ruby-sandi-metz/1119329331?ean=9780321721334) by Sandi Metz
+* [Working Effectively with Legacy Code](https://www.barnesandnoble.com/w/working-effectively-with-legacy-code-michael-feathers/1101414704?ean=9780131177055) by Michael Feathers
+* [Refactoring](https://www.barnesandnoble.com/w/refactoring-martin-fowler/1100891641?ean=9780133065268) by Martin Fowler
+* [Patterns of Enterprice Application Architecture](https://www.barnesandnoble.com/w/patterns-of-enterprise-application-architecture-martin-fowler/1126009522?ean=9780321127426) by Martin Fowler
 
 There are two metrics mentioned in the commit messages: flog and cyclomatic complexity.
 
